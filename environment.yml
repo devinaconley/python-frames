@@ -1,0 +1,26 @@
+name: framelib
+channels:
+  - defaults
+dependencies:
+  - ca-certificates
+  - ncurses
+  - openssl
+  - pip=23.3.1
+  - python=3.9.18
+  - readline
+  - setuptools
+  - sqlite
+  - tk
+  - tzdata
+  - wheel
+  - xz
+  - zlib
+  - pip:
+      - build~=1.0.3
+      - flask~=3.0.2
+      - pydantic
+      - pytest~=8.0.0
+      - python-dotenv~=1.0.1
+      - requests~=2.31.0
+      - twine~=5.0.0
+prefix: /home/devin/miniconda3/envs/framelib

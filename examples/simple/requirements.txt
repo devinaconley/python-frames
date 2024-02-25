@@ -1,0 +1,4 @@
+# requirements.txt
+framelib
+Flask~=3.0.1
+pydantic

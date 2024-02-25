@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <meta property="og:title" content="{{title}}"/>
+    <meta property="fc:frame" content="vNext"/>
+    <meta property="fc:frame:image" content="{{image}}"/>
+    <meta property="og:image" content="{{image}}"/>
+
+    {% if button1 is defined %}
+    <meta property="fc:frame:button:1" content="{{button1}}"/>
+    {% endif %}
+    {% if button1_action is defined %}
+    <meta property="fc:frame:button:1:action" content="{{button1_action}}"/>
+    {% endif %}
+    {% if button1_target is defined %}
+    <meta property="fc:frame:button:1:target" content="{{button1_target}}"/>
+    {% endif %}
+
+    {% if button2 is defined %}
+    <meta property="fc:frame:button:2" content="{{button2}}"/>
+    {% endif %}
+    {% if button2_action is defined %}
+    <meta property="fc:frame:button:2:action" content="{{button2_action}}"/>
+    {% endif %}
+    {% if button2_target is defined %}
+    <meta property="fc:frame:button:2:target" content="{{button2_target}}"/>
+    {% endif %}
+
+    {% if button3 is defined %}
+    <meta property="fc:frame:button:3" content="{{button3}}"/>
+    {% endif %}
+    {% if button3_action is defined %}
+    <meta property="fc:frame:button:3:action" content="{{button3_action}}"/>
+    {% endif %}
+    {% if button3_target is defined %}
+    <meta property="fc:frame:button:3:target" content="{{button3_target}}"/>
+    {% endif %}
+
+    {% if button4 is defined %}
+    <meta property="fc:frame:button:4" content="{{button4}}"/>
+    {% endif %}
+    {% if button4_action is defined %}
+    <meta property="fc:frame:button:4:action" content="{{button4_action}}"/>
+    {% endif %}
+    {% if button4_target is defined %}
+    <meta property="fc:frame:button:4:target" content="{{button4_target}}"/>
+    {% endif %}
+
+    {% if post_url is defined %}
+    <meta property="fc:frame:post_url" content="{{post_url}}"/>
+    {% endif %}
+
+    {% if input_text is defined %}
+    <meta property="fc:frame:input:text" content="{{input_text}}"/>
+    {% endif %}
+
+</head>
+<body>
+<h2>{{content}}</h2>
+<img src="{{image}}">
+</body>
+</html>
