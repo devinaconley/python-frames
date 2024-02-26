@@ -23,7 +23,7 @@ from framelib import render_frame
 
 app = Flask(__name__)
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def home():
     return render_frame(
         image='https://opengraph.githubassets.com/0x/devinaconley/python-frames',

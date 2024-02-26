@@ -9,6 +9,8 @@ from .models import FrameMessage, ValidatedMessage, Interactor, Profile, Bio, Bu
 
 
 def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
+    if not api_key:
+        raise ValueError('neynar api key not set')
     url = 'https://api.neynar.com/v2/farcaster/frame/validate'
     body = {
         'cast_reaction_context': False,  # TODO

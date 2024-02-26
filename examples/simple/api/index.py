@@ -2,6 +2,7 @@
 main entry point for example framelib flask app
 """
 import os
+import time
 from flask import Flask, url_for, jsonify
 from framelib import render_frame, message, validate_message_or_mock_vercel
 
@@ -19,7 +20,7 @@ def handle_invalid_usage(e):
 def home():
     # initial frame
     return render_frame(
-        image='https://opengraph.githubassets.com/0x/devinaconley/python-frames',
+        image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
         button1='hello \U0001F44B',
         post_url=url_for('second_page', _external=True),
         button2='github',
@@ -40,7 +41,7 @@ def second_page():
     print(f'validated frame message, fid: {msg_val.interactor.fid}, button: {msg_val.tapped_button}')
 
     return render_frame(
-        image='https://opengraph.githubassets.com/0x/devinaconley/python-frames',
+        image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
         button1='back \U0001F519',
         post_url=url_for('home', _external=True),
         input_text=f'hello {msg_val.interactor.username}!',
