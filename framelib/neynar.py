@@ -8,56 +8,48 @@ import requests
 from .models import FrameMessage, ValidatedMessage, Interactor, Profile, Bio, Button, Input
 
 
-def get_frame_action(msg: str) -> (bool, ValidatedMessage):
-    key = os.getenv('NEYNAR_KEY')
+def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
     url = 'https://api.neynar.com/v2/farcaster/frame/validate'
     body = {
-        'cast_reaction_context': False,
+        'cast_reaction_context': False,  # TODO
         'follow_context': False,
         'message_bytes_in_hex': msg
     }
     headers = {
         'accept': 'application/json',
-        'api_key': key,
+        'api_key': api_key,
         'content-type': 'application/json'
     }
     res = requests.post(url, json=body, headers=headers)
 
     body = res.json()
     if not body['valid']:
-        return False, None
+        raise ValueError('frame action message is invalid')
 
-    print(body)
     action = ValidatedMessage(**body['action'])
-    print(action)
 
-    return True, action
+    return action
 
 
-def validate_message(msg: FrameMessage) -> (bool, ValidatedMessage):
-    valid, action = get_frame_action(msg.trustedData.messageBytes)
-    if not valid:
-        return valid, action
+def validate_message(msg: FrameMessage, api_key: str) -> ValidatedMessage:
+    action = get_frame_action(msg.trustedData.messageBytes, api_key)
 
     if msg.untrustedData.fid != action.interactor.fid:
-        print(f'fid does not match: {msg.untrustedData.fid} {action.interactor.fid}')
-        return False, action
+        raise ValueError(f'fid does not match: {msg.untrustedData.fid} {action.interactor.fid}')
 
     if msg.untrustedData.buttonIndex != action.tapped_button.index:
-        print(f'button index does not match: {msg.untrustedData.buttonIndex} {action.tapped_button.index}')
-        return False, action
+        raise ValueError(f'button index does not match: {msg.untrustedData.buttonIndex} {action.tapped_button.index}')
 
     if msg.untrustedData.inputText is not None and msg.untrustedData.inputText != action.input.text:
-        print(f'text input does not match: {msg.untrustedData.inputText} {action.input.text}')
-        return False, action
+        raise ValueError(f'text input does not match: {msg.untrustedData.inputText} {action.input.text}')
 
-    return valid, action
+    return action
 
 
-def validate_message_or_mock(msg: FrameMessage) -> (bool, ValidatedMessage):
-    if os.getenv('VERCEL_ENV') is None:
+def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False) -> ValidatedMessage:
+    if mock:
         # mock
-        return True, ValidatedMessage(
+        return ValidatedMessage(
             object='validated_frame_action',
             interactor=Interactor(
                 object='user',
@@ -77,4 +69,8 @@ def validate_message_or_mock(msg: FrameMessage) -> (bool, ValidatedMessage):
             cast={}
         )
 
-    return validate_message(msg)
+    return validate_message(msg, api_key)
+
+
+def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> (bool, ValidatedMessage):
+    return validate_message_or_mock(msg, api_key, os.getenv('VERCEL_ENV') is None)
