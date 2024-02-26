@@ -49,6 +49,7 @@ def validate_message(msg: FrameMessage, api_key: str) -> ValidatedMessage:
 def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False) -> ValidatedMessage:
     if mock:
         # mock
+        # TODO option to populate with warpcast profile
         return ValidatedMessage(
             object='validated_frame_action',
             interactor=Interactor(
@@ -72,5 +73,6 @@ def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False
     return validate_message(msg, api_key)
 
 
-def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> (bool, ValidatedMessage):
-    return validate_message_or_mock(msg, api_key, os.getenv('VERCEL_ENV') is None)
+def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> ValidatedMessage:
+    vercel_env = os.getenv('VERCEL_ENV')
+    return validate_message_or_mock(msg, api_key, vercel_env is None or vercel_env == 'development')

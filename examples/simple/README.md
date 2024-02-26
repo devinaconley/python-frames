@@ -33,4 +33,12 @@ you can run the frame debugger provided by [frames.js](https://github.com/frames
 
 ## deployment
 
-_TODO_
+make sure your project has been pushed to a github repo
+
+import your project to [vercel](https://vercel.com/) with the flask framework
+
+register with [neynar](https://neynar.com/) to get an api key
+
+define the `NEYNAR_KEY` environment variable in your vercel project settings
+
+deploy!
