@@ -55,3 +55,24 @@ class TestRenderFrame(object):
             assert r.status_code == 200
             assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
             assert f'<meta property="fc:frame:state" content="{s}"/>'.encode('utf-8') in r.data
+
+    def test_max_age_default(self):
+        with app.app_context():
+            r = render_frame(image='https://website.com/im.png')
+            assert r.status_code == 200
+            assert r.cache_control.max_age is None
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+
+    def test_max_age_short(self):
+        with app.app_context():
+            r = render_frame(image='https://website.com/im.png', max_age=60)
+            assert r.status_code == 200
+            assert r.cache_control.max_age == 60
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+
+    def test_max_age_zero(self):
+        with app.app_context():
+            r = render_frame(image='https://website.com/im.png', max_age=0)
+            assert r.status_code == 200
+            assert r.cache_control.max_age == 0
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data

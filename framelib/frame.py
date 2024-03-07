@@ -35,7 +35,8 @@ def render_frame(
         button4_action: ButtonActions = None,
         button4_target: str = None,
         input_text: str = None,
-        state: str = None
+        state: str = None,
+        max_age: int = None
 ) -> Response:
     # TODO support cache age, aspect ratio, state data
 
@@ -54,6 +55,8 @@ def render_frame(
     # response
     res = make_response(html)
     res.status_code = 200
+    if max_age is not None:
+        res.cache_control.max_age = max_age
     return res
 
 
