@@ -4,6 +4,8 @@ test cases for frame rendering
 
 # lib
 import time
+import json
+from urllib.parse import quote, unquote
 import pytest
 from flask import Flask
 
@@ -45,3 +47,11 @@ class TestRenderFrame(object):
             assert r.status_code == 200
             assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
             assert b'<meta property="fc:frame:image:aspect_ratio" content="1:1"/>' in r.data
+
+    def test_state(self):
+        with app.app_context():
+            s = quote(json.dumps({'app': 'state'}))
+            r = render_frame(image='https://website.com/im.png', state=s)
+            assert r.status_code == 200
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+            assert f'<meta property="fc:frame:state" content="{s}"/>'.encode('utf-8') in r.data

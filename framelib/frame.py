@@ -34,7 +34,8 @@ def render_frame(
         button4: str = None,
         button4_action: ButtonActions = None,
         button4_target: str = None,
-        input_text: str = None
+        input_text: str = None,
+        state: str = None
 ) -> Response:
     # TODO support cache age, aspect ratio, state data
 

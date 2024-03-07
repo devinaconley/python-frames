@@ -60,6 +60,10 @@
     <meta property="fc:frame:image:aspect_ratio" content="{{aspect_ratio}}"/>
     {% endif %}
 
+    {% if state is defined %}
+    <meta property="fc:frame:state" content="{{state}}"/>
+    {% endif %}
+
 </head>
 <body>
 <h2>{{content}}</h2>
