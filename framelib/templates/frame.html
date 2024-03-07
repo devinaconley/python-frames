@@ -56,6 +56,10 @@
     <meta property="fc:frame:input:text" content="{{input_text}}"/>
     {% endif %}
 
+    {% if aspect_ratio is defined %}
+    <meta property="fc:frame:image:aspect_ratio" content="{{aspect_ratio}}"/>
+    {% endif %}
+
 </head>
 <body>
 <h2>{{content}}</h2>

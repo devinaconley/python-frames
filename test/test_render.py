@@ -31,3 +31,17 @@ class TestRenderFrame(object):
             assert b'<meta property="fc:frame:button:3" content="back"/>' in r.data
             assert b'<meta property="fc:frame:button:4"' not in r.data
             assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+
+    def test_aspect_ratio_default(self):
+        with app.app_context():
+            r = render_frame(image='https://website.com/im.png')
+            assert r.status_code == 200
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+            assert b'<meta property="fc:frame:image:aspect_ratio"' not in r.data
+
+    def test_aspect_ratio_1_1(self):
+        with app.app_context():
+            r = render_frame(image='https://website.com/im.png', aspect_ratio='1:1')
+            assert r.status_code == 200
+            assert b'<meta property="fc:frame:image" content="https://website.com/im.png"/>' in r.data
+            assert b'<meta property="fc:frame:image:aspect_ratio" content="1:1"/>' in r.data

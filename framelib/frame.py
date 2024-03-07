@@ -13,11 +13,13 @@ from .models import FrameMessage
 
 # enum types
 ButtonActions = Literal['post', 'post_redirect', 'mint', 'link']
+AspectRatio = Literal['1.91:1', '1:1']
 
 
 def render_frame(
         title: str = None,
         image: str = None,
+        aspect_ratio: AspectRatio = None,
         content: str = None,
         post_url: str = None,
         button1: str = None,
