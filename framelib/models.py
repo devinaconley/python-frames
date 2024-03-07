@@ -21,7 +21,7 @@ class UntrustedData(BaseModel):
     network: int
     buttonIndex: int
     inputText: Optional[str] = None
-    state: str
+    state: Optional[str] = None
     castId: CastId
 
 
