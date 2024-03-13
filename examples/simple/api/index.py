@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 @app.errorhandler(ValueError)
 def handle_invalid_usage(e):
+    print(f'error: {e}')
     response = jsonify({'status_code': 403, 'message': str(e)})
     response.status_code = 403
     return response
@@ -33,7 +34,7 @@ def home():
 def second_page():
     # parse frame message
     msg = message()
-    print(f'received frame message, fid: {msg.untrustedData.fid}, button: {msg.untrustedData.buttonIndex}')
+    print(f'received frame message: {msg}')
 
     # validate frame message with neynar
     api_key = os.getenv('NEYNAR_KEY')

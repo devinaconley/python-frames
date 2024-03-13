@@ -12,7 +12,7 @@ from flask import render_template_string, request, make_response, Response
 from .models import FrameMessage
 
 # enum types
-ButtonActions = Literal['post', 'post_redirect', 'mint', 'link']
+ButtonActions = Literal['post', 'post_redirect', 'mint', 'link', 'tx']
 AspectRatio = Literal['1.91:1', '1:1']
 
 
@@ -38,8 +38,6 @@ def render_frame(
         state: str = None,
         max_age: int = None
 ) -> Response:
-    # TODO support cache age, aspect ratio, state data
-
     # setup context
     # note: we do this because jinja treats None as a defined value
     ctx = {k: v for k, v in locals().items() if v is not None}
