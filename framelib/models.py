@@ -2,6 +2,7 @@
 data models
 """
 
+import datetime
 from typing import Optional
 from pydantic import BaseModel
 
@@ -75,13 +76,24 @@ class Input(BaseModel):
     text: str
 
 
+class State(BaseModel):
+    serialized: str
+
+
+class Transaction(BaseModel):
+    hash: str
+
+
 class ValidatedMessage(BaseModel):
     object: str
     interactor: Interactor
     tapped_button: Button
-    input: Input
+    input: Optional[Input] = None
+    state: Optional[State] = None
     url: str
     cast: dict
+    timestamp: datetime.datetime
+    transaction: Optional[Transaction] = None
 
 
 # ---- warpcast ----

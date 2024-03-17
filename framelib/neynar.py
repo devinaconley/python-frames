@@ -15,6 +15,7 @@ def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
     body = {
         'cast_reaction_context': False,  # TODO
         'follow_context': False,
+        'signer_context': False,
         'message_bytes_in_hex': msg
     }
     headers = {
@@ -44,6 +45,9 @@ def validate_message(msg: FrameMessage, api_key: str) -> ValidatedMessage:
 
     if msg.untrustedData.inputText is not None and msg.untrustedData.inputText != action.input.text:
         raise ValueError(f'text input does not match: {msg.untrustedData.inputText} {action.input.text}')
+
+    if msg.untrustedData.state is not None and msg.untrustedData.state != action.state.serialized:
+        raise ValueError(f'state does not match: {msg.untrustedData.state} {action.state.serialized}')
 
     return action
 
