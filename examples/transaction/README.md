@@ -1,6 +1,8 @@
-# simple python frame
+# python frame transaction
 
-simple example farcaster frame built with python, framelib, flask, and vercel
+example farcaster frame transactions to the wrapped eth contract on base
+
+built with python, framelib, flask, and vercel
 
 ## setup
 
