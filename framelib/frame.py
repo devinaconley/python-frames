@@ -16,7 +16,7 @@ ButtonActions = Literal['post', 'post_redirect', 'mint', 'link', 'tx']
 AspectRatio = Literal['1.91:1', '1:1']
 
 
-def render_frame(
+def frame(
         title: str = None,
         image: str = None,
         aspect_ratio: AspectRatio = None,

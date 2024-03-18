@@ -3,7 +3,7 @@ data models
 """
 
 import datetime
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel
 
 
@@ -23,6 +23,7 @@ class UntrustedData(BaseModel):
     buttonIndex: int
     inputText: Optional[str] = None
     state: Optional[str] = None
+    transactionId: Optional[str] = None
     castId: CastId
 
 
@@ -35,20 +36,35 @@ class FrameMessage(BaseModel):
     trustedData: TrustedData
 
 
+# ---- frame transaction ----
+
+class EthTransactionParams(BaseModel):
+    abi: list[dict]
+    to: str
+    value: Optional[str]
+    data: Optional[str]
+
+
+class Transaction(BaseModel):
+    chainId: str
+    method: Literal['eth_sendTransaction']
+    params: EthTransactionParams
+
+
 # ---- neynar ----
 
-class Viewer(BaseModel):
+class NeynarViewer(BaseModel):
     following: bool
     followed_by: bool
 
 
-class Bio(BaseModel):
+class NeynarBio(BaseModel):
     text: str
     mentioned_profiles: Optional[list[str]] = []
 
 
-class Profile(BaseModel):
-    bio: Bio
+class NeynarProfile(BaseModel):
+    bio: NeynarBio
 
 
 class Interactor(BaseModel):
@@ -58,42 +74,42 @@ class Interactor(BaseModel):
     display_name: str
     custody_address: Optional[str] = None
     pfp_url: str
-    profile: Profile
+    profile: NeynarProfile
     follower_count: int
     following_count: int
     verifications: list[str]
     active_status: str
-    viewer_context: Optional[Viewer] = None
+    viewer_context: Optional[NeynarViewer] = None
 
 
-class Button(BaseModel):
+class NeynarButton(BaseModel):
     title: Optional[str] = None
     index: int
     action_type: Optional[str] = None
 
 
-class Input(BaseModel):
+class NeynarInput(BaseModel):
     text: str
 
 
-class State(BaseModel):
+class NeynarState(BaseModel):
     serialized: str
 
 
-class Transaction(BaseModel):
+class NeynarTransaction(BaseModel):
     hash: str
 
 
 class ValidatedMessage(BaseModel):
     object: str
     interactor: Interactor
-    tapped_button: Button
-    input: Optional[Input] = None
-    state: Optional[State] = None
+    tapped_button: NeynarButton
+    input: Optional[NeynarInput] = None
+    state: Optional[NeynarState] = None
     url: str
     cast: dict
     timestamp: datetime.datetime
-    transaction: Optional[Transaction] = None
+    transaction: Optional[NeynarTransaction] = None
 
 
 # ---- warpcast ----

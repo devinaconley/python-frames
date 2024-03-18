@@ -5,7 +5,8 @@ import os
 
 import requests
 
-from .models import FrameMessage, ValidatedMessage, Interactor, Profile, Bio, Button, Input
+from .models import FrameMessage, ValidatedMessage, Interactor, NeynarProfile, NeynarBio, NeynarButton, NeynarInput, \
+    NeynarState, NeynarTransaction
 
 
 def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
@@ -64,15 +65,18 @@ def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False
                 username=f'username {msg.untrustedData.fid}',
                 display_name=f'display name {msg.untrustedData.fid}',
                 pfp_url='',
-                profile=Profile(bio=Bio(text='')),
+                profile=NeynarProfile(bio=NeynarBio(text='')),
                 follower_count=0,
                 following_count=0,
                 verifications=['0x'],
                 active_status='',
             ),
-            tapped_button=Button(index=msg.untrustedData.buttonIndex),
-            input=Input(text=msg.untrustedData.inputText or ''),
+            tapped_button=NeynarButton(index=msg.untrustedData.buttonIndex),
+            input=NeynarInput(text=msg.untrustedData.inputText or ''),  # TODO set model to None if missing
+            state=NeynarState(serialized=msg.untrustedData.state or ''),
+            transaction=NeynarTransaction(hash=msg.untrustedData.transactionId or ''),
             url=msg.untrustedData.url,
+            timestamp=msg.untrustedData.timestamp,
             cast={}
         )
 

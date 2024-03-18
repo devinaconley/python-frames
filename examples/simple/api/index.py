@@ -4,7 +4,7 @@ main entry point for example framelib flask app
 import os
 import time
 from flask import Flask, url_for, jsonify
-from framelib import render_frame, message, validate_message_or_mock_vercel
+from framelib import frame, message, validate_message_or_mock_vercel
 
 app = Flask(__name__)
 
@@ -20,7 +20,7 @@ def handle_invalid_usage(e):
 @app.route('/', methods=['GET', 'POST'])
 def home():
     # initial frame
-    return render_frame(
+    return frame(
         image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
         button1='hello \U0001F44B',
         post_url=url_for('second_page', _external=True),
@@ -41,7 +41,7 @@ def second_page():
     msg_val = validate_message_or_mock_vercel(msg, api_key)
     print(f'validated frame message, fid: {msg_val.interactor.fid}, button: {msg_val.tapped_button}')
 
-    return render_frame(
+    return frame(
         image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
         button1='back \U0001F519',
         post_url=url_for('home', _external=True),

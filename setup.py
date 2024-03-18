@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='framelib',
-    version='0.0.3b0',
+    version='0.0.3b1',
     author='Devin A. Conley',
     author_email='devinaconley@gmail.com',
     description='lightweight library for building farcaster frames using python and flask',
@@ -22,6 +22,9 @@ setuptools.setup(
         'Operating System :: OS Independent',
     ],
     install_requires=[
+        'eth-abi>=5,<6',
+        'eth-hash[pysha3]',
+        'eth-utils',
         'flask>=3,<4',
         'pydantic>=2,<3',
         'requests>=2,<3'
