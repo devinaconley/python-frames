@@ -21,11 +21,11 @@ class TestTransaction(object):
     def test_deposit(self):
         abi = json.loads(ABI_WETH)
         with app.app_context():
-            res = transaction(8452, '0x4200000000000000000000000000000000000006', abi,
+            res = transaction(8453, '0x4200000000000000000000000000000000000006', abi,
                               value='50000000000000000', function_signature='deposit()')
 
             assert res.status_code == 200
-            assert res.json['chainId'] == '8452'
+            assert res.json['chainId'] == '8453'
             assert res.json['method'] == 'eth_sendTransaction'
             assert res.json['params']['abi'] == abi
             assert res.json['params']['to'] == '0x4200000000000000000000000000000000000006'
@@ -35,11 +35,11 @@ class TestTransaction(object):
     def test_withdraw(self):
         abi = json.loads(ABI_WETH)
         with app.app_context():
-            res = transaction(8452, '0x4200000000000000000000000000000000000006', abi,
+            res = transaction(8453, '0x4200000000000000000000000000000000000006', abi,
                               function_signature='withdraw(uint256)', function_arguments=[int(123e18)])
 
             assert res.status_code == 200
-            assert res.json['chainId'] == '8452'
+            assert res.json['chainId'] == '8453'
             assert res.json['method'] == 'eth_sendTransaction'
             assert res.json['params']['abi'] == abi
             assert res.json['params']['to'] == '0x4200000000000000000000000000000000000006'
