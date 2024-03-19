@@ -7,6 +7,7 @@ lightweight library for building farcaster frames using python and flask
 - parse frame action messages
 - verify the frame action signatures using neynar
 - query user profile info from warpcast
+- on-chain frame transactions
 
 
 ## quickstart
@@ -19,13 +20,13 @@ pip install framelib
 simple example
 ```python
 from flask import Flask, url_for
-from framelib import render_frame
+from framelib import frame
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_frame(
+    return frame(
         image='https://opengraph.githubassets.com/0x/devinaconley/python-frames',
         button1='next',
         post_url=url_for('second_page', _external=True),
@@ -35,6 +36,8 @@ def home():
 ## examples
 
 see a complete example using python + flask + vercel [here](https://github.com/devinaconley/python-frames/tree/main/examples/simple)
+
+for an example that uses on-chain frame transactions, see the [weth frame](https://github.com/devinaconley/python-frames/tree/main/examples/transaction)
 
 and for a more advanced example involving multiplayer games, supabase integration, dynamic image rendering, and more,
 see [rock paper scissors](https://github.com/devinaconley/rock-paper-scissors)

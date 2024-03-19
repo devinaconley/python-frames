@@ -5,6 +5,7 @@ main entry point for example framelib flask app
 import json
 from flask import Flask, url_for, jsonify, request
 from framelib import frame, message, validate_message_or_mock_vercel, transaction
+from eth_utils import to_wei
 
 from .constant import ABI_WETH, CHAIN_ID, ADDRESS_WETH, IM_WETH
 
@@ -30,27 +31,42 @@ def home():
         aspect_ratio='1:1',
         button1='deposit()',
         button1_action='tx',
-        button1_target=url_for('tx_deposit', _external=True, value=f'{int(0.01e18):d}'),
+        button1_target=url_for('tx_deposit', _external=True, value=to_wei(0.01, 'ether')),
         button2='withdraw()',
         button2_action='tx',
-        button2_target=url_for('tx_withdraw', _external=True, value=f'{int(0.01e18):d}'),
+        button2_target=url_for('tx_withdraw', _external=True, value=to_wei(0.01, 'ether')),
+        input_text='WETH amount',
         post_url=url_for('home', _external=True)
     )
 
 
 @app.route('/tx/deposit', methods=['GET', 'POST'])
 def tx_deposit():
-    value = request.args.get('value')
+    # get amount from input field or query param
+    try:
+        msg = message()
+        value = str(to_wei(float(msg.untrustedData.inputText), 'ether'))
+    except:
+        value = request.args.get('value')
     if value is None:
-        raise ValueError
+        raise ValueError('deposit amount missing')
+
+    # transaction response
     abi = json.loads(ABI_WETH)
-    return transaction(CHAIN_ID, ADDRESS_WETH, abi, value, 'deposit()')
+    return transaction(CHAIN_ID, ADDRESS_WETH, abi, value=value, function_signature='deposit()')
 
 
 @app.route('/tx/withdraw', methods=['GET', 'POST'])
 def tx_withdraw():
-    value = request.args.get('value')
+    # get amount from input field or query param
+    try:
+        msg = message()
+        value = to_wei(float(msg.untrustedData.inputText), 'ether')
+    except:
+        value = int(request.args.get('value'))
     if value is None:
-        raise ValueError
+        raise ValueError('withdraw amount missing')
+
+    # transaction response
     abi = json.loads(ABI_WETH)
-    return transaction(CHAIN_ID, ADDRESS_WETH, abi, value, 'withdraw(uint256)')
+    return transaction(CHAIN_ID, ADDRESS_WETH, abi, function_signature='withdraw(uint256)', function_arguments=[value])
