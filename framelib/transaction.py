@@ -42,7 +42,7 @@ def transaction(
 
     # setup frame transaction
     tx = Transaction(
-        chainId=str(chain_id),
+        chainId=f'eip155:{chain_id}',
         method='eth_sendTransaction',
         params=EthTransactionParams(abi=abi, to=contract, value=value, data=data)
     )

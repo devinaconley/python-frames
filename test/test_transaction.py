@@ -25,7 +25,7 @@ class TestTransaction(object):
                               value='50000000000000000', function_signature='deposit()')
 
             assert res.status_code == 200
-            assert res.json['chainId'] == '8453'
+            assert res.json['chainId'] == 'eip155:8453'
             assert res.json['method'] == 'eth_sendTransaction'
             assert res.json['params']['abi'] == abi
             assert res.json['params']['to'] == '0x4200000000000000000000000000000000000006'
@@ -39,7 +39,7 @@ class TestTransaction(object):
                               function_signature='withdraw(uint256)', function_arguments=[int(123e18)])
 
             assert res.status_code == 200
-            assert res.json['chainId'] == '8453'
+            assert res.json['chainId'] == 'eip155:8453'
             assert res.json['method'] == 'eth_sendTransaction'
             assert res.json['params']['abi'] == abi
             assert res.json['params']['to'] == '0x4200000000000000000000000000000000000006'
