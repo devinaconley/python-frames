@@ -21,7 +21,7 @@ def handle_invalid_usage(e):
 def home():
     # initial frame
     return frame(
-        image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
+        image=_github_preview_image(),
         button1='hello \U0001F44B',
         post_url=url_for('second_page', _external=True),
         button2='github',
@@ -42,7 +42,7 @@ def second_page():
     print(f'validated frame message, fid: {msg_val.interactor.fid}, button: {msg_val.tapped_button}')
 
     return frame(
-        image=f'https://opengraph.githubassets.com/{int(time.time())}/devinaconley/python-frames',
+        image=_github_preview_image(),
         button1='back \U0001F519',
         post_url=url_for('home', _external=True),
         input_text=f'hello {msg_val.interactor.username}!',
@@ -50,3 +50,8 @@ def second_page():
         button2_action='link',
         button2_target='https://github.com/devinaconley/python-frames'
     )
+
+
+def _github_preview_image() -> str:
+    hour = int((time.time() // 3600) * 3600)  # github throttles if you invalidate image cache too much
+    return f'https://opengraph.githubassets.com/{hour}/devinaconley/python-frames'
