@@ -1,15 +1,17 @@
 """
 methods to call neynar api
 """
-import os
 
+# lib
+import os
 import requests
 
-from .models import FrameMessage, ValidatedMessage, Interactor, NeynarProfile, NeynarBio, NeynarButton, NeynarInput, \
-    NeynarState, NeynarTransaction
+# src
+from .models import FrameMessage, NeynarValidatedMessage, NeynarInteractor, NeynarProfile, NeynarBio, \
+    NeynarButton, NeynarInput, NeynarState, NeynarTransaction
 
 
-def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
+def get_frame_action(msg: str, api_key: str) -> NeynarValidatedMessage:
     if not api_key:
         raise ValueError('neynar api key not set')
     url = 'https://api.neynar.com/v2/farcaster/frame/validate'
@@ -30,12 +32,12 @@ def get_frame_action(msg: str, api_key: str) -> ValidatedMessage:
     if not body['valid']:
         raise ValueError('frame action message is invalid')
 
-    action = ValidatedMessage(**body['action'])
+    action = NeynarValidatedMessage(**body['action'])
 
     return action
 
 
-def validate_message(msg: FrameMessage, api_key: str) -> ValidatedMessage:
+def validate_message(msg: FrameMessage, api_key: str) -> NeynarValidatedMessage:
     action = get_frame_action(msg.trustedData.messageBytes, api_key)
 
     if msg.untrustedData.fid != action.interactor.fid:
@@ -53,13 +55,13 @@ def validate_message(msg: FrameMessage, api_key: str) -> ValidatedMessage:
     return action
 
 
-def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False) -> ValidatedMessage:
+def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False) -> NeynarValidatedMessage:
     if mock:
         # mock
         # TODO option to populate with warpcast profile
-        return ValidatedMessage(
+        return NeynarValidatedMessage(
             object='validated_frame_action',
-            interactor=Interactor(
+            interactor=NeynarInteractor(
                 object='user',
                 fid=msg.untrustedData.fid,
                 username=f'username {msg.untrustedData.fid}',
@@ -83,6 +85,6 @@ def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False
     return validate_message(msg, api_key)
 
 
-def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> ValidatedMessage:
+def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> NeynarValidatedMessage:
     vercel_env = os.getenv('VERCEL_ENV')
     return validate_message_or_mock(msg, api_key, vercel_env is None or vercel_env == 'development')
