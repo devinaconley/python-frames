@@ -26,7 +26,8 @@ def home():
         post_url=url_for('second_page', _external=True),
         button2='github',
         button2_action='link',
-        button2_target='https://github.com/devinaconley/python-frames'
+        button2_target='https://github.com/devinaconley/python-frames',
+        button3='do not press'
     )
 
 
@@ -36,8 +37,8 @@ def second_page():
     msg = message()
     print(f'received frame message: {msg}')
 
-    if msg.untrustedData.fid == 123:
-        e = error('user 123 is not allowed!')
+    if msg.untrustedData.buttonIndex == 3:
+        e = error('wrong button!')
         print(e)
         return e
 

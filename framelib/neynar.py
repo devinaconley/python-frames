@@ -26,8 +26,11 @@ def get_frame_message(msg: str, api_key: str) -> NeynarValidatedMessage:
         'api_key': api_key,
         'content-type': 'application/json'
     }
+
     res = requests.post(url, json=body, headers=headers)
 
+    if res.status_code != 200:
+        raise ValueError(f'failed request to neynar: {res.text}')
     body = res.json()
     if not body['valid']:
         raise ValueError('frame action message is invalid')

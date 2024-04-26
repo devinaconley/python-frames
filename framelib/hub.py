@@ -24,11 +24,15 @@ def get_message(
     auth = None
     if username:
         auth = (username, password)
+
     res = requests.post(url, headers=headers, auth=auth, data=bytes.fromhex(msg))
 
+    if res.status_code != 200:
+        raise ValueError(f'failed request to hub: {res.text}')
     body = res.json()
     if not body['valid']:
         raise ValueError('frame action message is invalid')
+
     action = ValidatedMessage(**body['message'])
 
     return action
