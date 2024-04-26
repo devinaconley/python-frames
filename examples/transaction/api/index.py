@@ -4,7 +4,7 @@ main entry point for example framelib flask app
 
 import json
 from flask import Flask, url_for, jsonify, request
-from framelib import frame, message, validate_message_or_mock_vercel, transaction
+from framelib import frame, message, transaction
 from eth_utils import to_wei
 
 from .constant import ABI_WETH, CHAIN_ID, ADDRESS_WETH, IM_WETH
@@ -36,7 +36,8 @@ def home():
         button2_action='tx',
         button2_target=url_for('tx_withdraw', _external=True, value=to_wei(0.01, 'ether')),
         input_text='WETH amount',
-        post_url=url_for('home', _external=True)
+        post_url=url_for('home', _external=True),
+        max_age=3600
     )
 
 

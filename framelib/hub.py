@@ -60,7 +60,14 @@ def validate_message(
     return action
 
 
-def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False) -> ValidatedMessage:
+def validate_message_or_mock(
+        msg: FrameMessage,
+        hub: str,
+        username: str = None,
+        password: str = None,
+        api_key: str = None,
+        mock: bool = False
+) -> ValidatedMessage:
     if mock:
         # mock
         return ValidatedMessage(
@@ -68,7 +75,7 @@ def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False
                 type='MESSAGE_TYPE_FRAME_ACTION',
                 fid=msg.untrustedData.fid,
                 timestamp=msg.untrustedData.timestamp,
-                network=msg.untrustedData.network,
+                network=str(msg.untrustedData.network),
                 frameActionBody=FrameAction(
                     url=msg.untrustedData.url,
                     buttonIndex=msg.untrustedData.buttonIndex,
@@ -78,16 +85,11 @@ def validate_message_or_mock(msg: FrameMessage, api_key: str, mock: bool = False
                     transactionId=msg.untrustedData.transactionId
                 )
             ),
-            hash=msg.untrustedData.hash,
+            hash=msg.untrustedData.messageHash,
             hashScheme='HASH_SCHEME_BLAKE',
             signature='',
-            signature_scheme='SIGNATURE_SCHEME_ED25519',
+            signatureScheme='SIGNATURE_SCHEME_ED25519',
             signer=''
         )
 
-    return validate_message(msg, api_key)
-
-
-def validate_message_or_mock_vercel(msg: FrameMessage, api_key: str) -> ValidatedMessage:
-    vercel_env = os.getenv('VERCEL_ENV')
-    return validate_message_or_mock(msg, api_key, vercel_env is None or vercel_env == 'development')
+    return validate_message(msg, hub, username=username, password=password, api_key=api_key)

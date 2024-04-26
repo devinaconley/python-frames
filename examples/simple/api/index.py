@@ -4,7 +4,7 @@ main entry point for example framelib flask app
 import os
 import time
 from flask import Flask, url_for, jsonify
-from framelib import frame, message, validate_message_or_mock_vercel
+from framelib import frame, message, validate_message_or_mock, validate_message_or_mock_neynar
 
 app = Flask(__name__)
 
@@ -38,14 +38,18 @@ def second_page():
 
     # validate frame message with neynar
     api_key = os.getenv('NEYNAR_KEY')
-    msg_val = validate_message_or_mock_vercel(msg, api_key)
-    print(f'validated frame message, fid: {msg_val.interactor.fid}, button: {msg_val.tapped_button}')
+    msg_neynar = validate_message_or_mock_neynar(msg, api_key, mock=_vercel_local())
+    print(f'validated frame message, fid: {msg_neynar.interactor.fid}, button: {msg_neynar.tapped_button}')
+
+    # validate frame message with hub
+    msg_hub = validate_message_or_mock(msg, 'https://nemes.farcaster.xyz:2281', mock=_vercel_local())
+    print(f'validated frame message hub, fid: {msg_hub.data.fid}, button: {msg_hub.data.frameActionBody.buttonIndex}')
 
     return frame(
         image=_github_preview_image(),
         button1='back \U0001F519',
         post_url=url_for('home', _external=True),
-        input_text=f'hello {msg_val.interactor.username}!',
+        input_text=f'hello {msg_neynar.interactor.username}!',
         button2='github',
         button2_action='link',
         button2_target='https://github.com/devinaconley/python-frames'
@@ -55,3 +59,8 @@ def second_page():
 def _github_preview_image() -> str:
     hour = int((time.time() // 3600) * 3600)  # github throttles if you invalidate image cache too much
     return f'https://opengraph.githubassets.com/{hour}/devinaconley/python-frames'
+
+
+def _vercel_local() -> bool:
+    vercel_env = os.getenv('VERCEL_ENV')
+    return vercel_env is None or vercel_env == 'development'
