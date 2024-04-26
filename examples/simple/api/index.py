@@ -12,9 +12,7 @@ app = Flask(__name__)
 @app.errorhandler(ValueError)
 def handle_invalid_usage(e):
     print(f'error: {e}')
-    response = jsonify({'status_code': 403, 'message': str(e)})
-    response.status_code = 403
-    return response
+    return error(text=str(e), status=403)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -24,10 +22,10 @@ def home():
         image=_github_preview_image(),
         button1='hello \U0001F44B',
         post_url=url_for('second_page', _external=True),
-        button2='github',
-        button2_action='link',
-        button2_target='https://github.com/devinaconley/python-frames',
-        button3='do not press'
+        button2='do not press \U0001F6AB',
+        button3='github',
+        button3_action='link',
+        button3_target='https://github.com/devinaconley/python-frames'
     )
 
 
@@ -37,19 +35,19 @@ def second_page():
     msg = message()
     print(f'received frame message: {msg}')
 
-    if msg.untrustedData.buttonIndex == 3:
-        e = error('wrong button!')
-        print(e)
-        return e
+    # check input
+    if msg.untrustedData.buttonIndex == 2:
+        print('invalid button input')
+        return error('wrong button!')  # popup message to user
 
     # validate frame message with neynar
     api_key = os.getenv('NEYNAR_KEY')
     msg_neynar = validate_message_or_mock_neynar(msg, api_key, mock=_vercel_local())
     print(f'validated frame message, fid: {msg_neynar.interactor.fid}, button: {msg_neynar.tapped_button}')
 
-    # validate frame message with hub
-    msg_hub = validate_message_or_mock(msg, 'https://nemes.farcaster.xyz:2281', mock=_vercel_local())
-    print(f'validated frame message hub, fid: {msg_hub.data.fid}, button: {msg_hub.data.frameActionBody.buttonIndex}')
+    # validate frame message with hub (alternative)
+    # msg_hub = validate_message_or_mock(msg, 'https://nemes.farcaster.xyz:2281', mock=_vercel_local())
+    # print(f'validated frame message hub, fid: {msg_hub.data.fid}, button: {msg_hub.data.frameActionBody.buttonIndex}')
 
     return frame(
         image=_github_preview_image(),
