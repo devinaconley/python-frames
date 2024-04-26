@@ -14,17 +14,21 @@ class CastId(BaseModel):
     hash: str
 
 
-class UntrustedData(BaseModel):
-    fid: int
+class FrameAction(BaseModel):
     url: str
-    messageHash: str
-    timestamp: int
-    network: int
     buttonIndex: int
     inputText: Optional[str] = None
     state: Optional[str] = None
     transactionId: Optional[str] = None
     castId: CastId
+
+
+class UntrustedData(FrameAction):
+    # note: this untrusted message seems to collapse the ValidatedDate and FrameAction fields
+    fid: int
+    messageHash: str
+    timestamp: int
+    network: int
 
 
 class TrustedData(BaseModel):
@@ -51,6 +55,25 @@ class Transaction(BaseModel):
     params: EthTransactionParams
 
 
+# ---- hub ----
+
+class ValidatedData(BaseModel):
+    type: str
+    fid: int
+    timestamp: datetime.datetime
+    network: str
+    frameActionBody: FrameAction
+
+
+class ValidatedMessage(BaseModel):
+    data: ValidatedData
+    hash: str
+    hashScheme: str
+    signature: str
+    signatureScheme: str
+    signer: str
+
+
 # ---- neynar ----
 
 class NeynarViewer(BaseModel):
@@ -67,7 +90,7 @@ class NeynarProfile(BaseModel):
     bio: NeynarBio
 
 
-class Interactor(BaseModel):
+class NeynarInteractor(BaseModel):
     object: str
     fid: int
     username: str
@@ -100,9 +123,9 @@ class NeynarTransaction(BaseModel):
     hash: str
 
 
-class ValidatedMessage(BaseModel):
+class NeynarValidatedMessage(BaseModel):
     object: str
-    interactor: Interactor
+    interactor: NeynarInteractor
     tapped_button: NeynarButton
     input: Optional[NeynarInput] = None
     state: Optional[NeynarState] = None
