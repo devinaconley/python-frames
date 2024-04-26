@@ -4,7 +4,7 @@ main entry point for example framelib flask app
 import os
 import time
 from flask import Flask, url_for, jsonify
-from framelib import frame, message, validate_message_or_mock, validate_message_or_mock_neynar
+from framelib import frame, message, validate_message_or_mock, validate_message_or_mock_neynar, error
 
 app = Flask(__name__)
 
@@ -35,6 +35,11 @@ def second_page():
     # parse frame message
     msg = message()
     print(f'received frame message: {msg}')
+
+    if msg.untrustedData.fid == 123:
+        e = error('user 123 is not allowed!')
+        print(e)
+        return e
 
     # validate frame message with neynar
     api_key = os.getenv('NEYNAR_KEY')

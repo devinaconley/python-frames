@@ -20,6 +20,7 @@ class FrameAction(BaseModel):
     inputText: Optional[str] = None
     state: Optional[str] = None
     transactionId: Optional[str] = None
+    address: Optional[str] = None
     castId: CastId
 
 
@@ -53,6 +54,12 @@ class Transaction(BaseModel):
     chainId: str
     method: Literal['eth_sendTransaction']
     params: EthTransactionParams
+
+
+# ---- frame error ----
+
+class FrameError(BaseModel):
+    message: str
 
 
 # ---- hub ----

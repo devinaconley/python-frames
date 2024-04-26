@@ -6,10 +6,10 @@ methods for frame rendering and message handling
 import json
 from importlib import resources
 from typing import Literal
-from flask import render_template_string, request, make_response, Response
+from flask import render_template_string, request, make_response, jsonify, Response
 
 # src
-from .models import FrameMessage
+from .models import FrameMessage, FrameError
 
 # enum types
 ButtonActions = Literal['post', 'post_redirect', 'mint', 'link', 'tx']
@@ -63,3 +63,12 @@ def message() -> FrameMessage:
     body = json.loads(request.data)
     msg = FrameMessage(**body)
     return msg
+
+
+def error(text: str, status: int = 400) -> Response:
+    if len(text) > 90:
+        print('warning: error message exceeds 90 characters')
+    e = FrameError(message=text)
+    res = jsonify(e.model_dump())
+    res.status_code = status
+    return res

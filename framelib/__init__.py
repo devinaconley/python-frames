@@ -2,7 +2,7 @@
 framelib module
 """
 
-from .frame import frame, message
+from .frame import frame, message, error
 from .hub import validate_message, validate_message_or_mock
 from .models import FrameMessage, ValidatedMessage, User
 from .warpcast import get_user
